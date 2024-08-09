@@ -28,7 +28,7 @@ class LogInButton extends StatelessWidget {
               color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         style: ElevatedButton.styleFrom(
-          primary: Colors.white,
+          backgroundColor: Colors.white,
           elevation: 5,
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

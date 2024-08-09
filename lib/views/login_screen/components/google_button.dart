@@ -42,7 +42,7 @@ class GoogleButtonState extends State<GoogleButton> {
             ],
           ),
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
+            backgroundColor: Colors.white,
             elevation: 5,
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -39,7 +39,7 @@ class FacebookButton extends StatelessWidget {
             ],
           ),
           style: ElevatedButton.styleFrom(
-            primary: Colors.white,
+            backgroundColor: Colors.white,
             elevation: 5,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -40,7 +40,7 @@ class LoginButtonState extends State<LoginButton> {
               ),
             ),
             style: ElevatedButton.styleFrom(
-              primary: const Color(0xFF1CB0F6),
+              backgroundColor: const Color(0xFF1CB0F6),
               elevation: 5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

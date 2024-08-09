@@ -24,7 +24,7 @@ class ContinueButton extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          primary: const Color(0xFF58CC02),
+          backgroundColor: const Color(0xFF58CC02),
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
