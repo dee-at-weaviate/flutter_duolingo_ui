@@ -40,6 +40,7 @@ dependencies:
   percent_indicator: 
   contained_tab_bar_view: 
   flutter_custom_dialog: 
+  logging:
 
 dev_dependencies:
   flutter_test:

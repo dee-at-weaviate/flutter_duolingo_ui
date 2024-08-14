@@ -1,11 +1,18 @@
+import 'package:duolingo/util/api.dart';
 import 'package:duolingo/views/lesson_screen/components/bottom_button.dart';
 import 'package:duolingo/views/lesson_screen/components/grid_lesson.dart';
 import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
 import 'package:duolingo/views/lesson_screen/components/list_lesson.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+
+final Logger logger = Logger('LessonScreen');
 
 class LessonScreen extends StatefulWidget {
-  const LessonScreen({Key? key}) : super(key: key);
+  final String courseId;
+
+  // const LessonScreen({Key? key}) : super(key: key);
+  const LessonScreen ({ required this.courseId});
 
   @override
   State<StatefulWidget> createState() {
@@ -16,30 +23,61 @@ class LessonScreen extends StatefulWidget {
 class LessonScreenState extends State<LessonScreen> {
   double percent = 0.2;
   int index = 0;
+  late List questions;
+
+  @override
+  void initState() {
+    super.initState();
+    // logger.info('in init load quesitons');
+    // questions = _loadQuestions(widget.courseId);
+  }
+
+  Future<List<dynamic>> _loadQuestions(courseId) async {
+    logger.info('in load quesitons');
+    String url = "questions/all/cc0cfc6b-180a-4f21-a2f4-077391710866";
+    try {
+      final response = await API.get(url);
+      return response['questions'];
+    } catch (e) {
+      logger.fine('in error');
+      logger.fine(e);
+      return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    var lessons = [
-      GridLesson(checkButton: bottomButton(context, 'CHECK')),
-      ListLesson('Translate the sentence', 'Tôi là học sinh.',
-          ['I am a chicken.', 'I\'m a student.', 'They are a student.'],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson('Translate the sentence', 'Xin chào.',
-          ['Hello.', 'My name is Duolingo.', 'What is your name?'],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson('Choose an appropriate response', 'Bạn tên gì?',
-          ['Tôi tên là Duolingo.', 'Tôi học lớp 2.', 'Tôi không biết.'],
-          checkButton: bottomButton(context, 'CHECK')),
-      ListLesson('Translate the sentence', 'Bye.',
-          ['Tôi ổn.', 'Tạm biệt.', 'Ngủ ngon.'],
-          checkButton: bottomButton(context, 'CHECK')),
-    ];
+    logger.info('in build of lesson node');
+    var newLessons = [];
+    return FutureBuilder(
+      future: _loadQuestions(widget.courseId), 
+      builder: (context, snapshot) {        
+        if(snapshot.hasData) {
+          questions = snapshot.data as List<dynamic>;
+          // logger.info(questions);
+          // logger.info(questions[0]);
+          var newLessons = [];
+          for (int i=0; i< questions.length; i++) {
+            newLessons.add(
+              ListLesson('Translate the sentence', questions[i]['text'],
+              [questions[i]['image_1'], questions[i]['image_2'], questions[i]['image_3'], questions[i]['image_4']],
+              checkButton: bottomButton(context, 'CHECK')));
+          }
+          logger.info(newLessons);
+          newLessons.add(GridLesson(checkButton: bottomButton(context, 'CHECK')));
 
-    return Scaffold(
-      appBar: LessonAppBar(percent: percent),
-      body: lessons[index],
+          return Scaffold(
+            appBar: LessonAppBar(percent: percent),
+            body: newLessons[index],
+          );
+        } else {
+          return Text('noooo');
+        }      
+      }
     );
-  }
+  } 
+
+
 
   bottomButton(BuildContext context, String title) {
     return Center(
@@ -51,7 +89,7 @@ class LessonScreenState extends State<LessonScreen> {
           onPressed: () {
             setState(() {
               if (percent < 1) {
-                percent += 0.2;
+                percent += 0.4;
                 index++;
               } else {
                 showDialog(

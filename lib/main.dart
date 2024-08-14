@@ -1,7 +1,16 @@
 import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  Logger.root.level = Level.ALL; // Set the log level (e.g., Level.INFO, Level.DEBUG)
+  // Logger.root.onRecord.listen((record) {
+  //   print('${record.level.name}: ${record.time}: ${record.message}');
+  // });
+
+  Logger.root.onRecord.listen((record) {
+    print('${record.loggerName} : [${record.level.name}] (${record.sequenceNumber}): ${record.message}');
+  });
   runApp(MyDuolingo());
 }
 

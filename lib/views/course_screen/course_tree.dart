@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'components/course_node.dart';
 import 'components/double_course_node.dart';
 import 'components/triple_course_node.dart';
+import 'package:logging/logging.dart';
+
+final Logger logger = Logger('CourseTree');
+
 
 class CourseTree extends StatelessWidget {
   const CourseTree({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // logger.info('in build of course tree');
     return SingleChildScrollView(
       child: Column(
         children: [
