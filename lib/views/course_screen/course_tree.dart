@@ -17,7 +17,7 @@ class CourseTree extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Padding(padding: EdgeInsets.all(10)),
+          const Padding(padding: EdgeInsets.all(15)),
           CourseNode(
             'Basic',
             crown: 1,
@@ -62,40 +62,40 @@ class CourseTree extends StatelessWidget {
             crown: 4,
           ),
           const Padding(padding: EdgeInsets.all(10)),
-          TripleCourseNode(
-            CourseNode(
-              'Clothing',
-              image: 'assets/images/heel.png',
-              color: Colors.yellow.shade500,
-            ),
-            CourseNode(
-              'Tools',
-              image: 'assets/images/hammer.png',
-              color: Colors.grey,
-              percent: 0.7,
-            ),
-            CourseNode(
-              'Emotions',
-              image: 'assets/images/emotion.png',
-              color: Colors.blue,
-              crown: 2,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.all(10)),
-          DoubleCourseNode(
-            CourseNode(
-              'Daily',
-              image: 'assets/images/dumbbell.png',
-              color: Colors.purple.shade200,
-              percent: 0.2,
-            ),
-            CourseNode(
-              'Travel',
-              image: 'assets/images/tree.png',
-              color: Colors.pink,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 15)),
+          // TripleCourseNode(
+          //   CourseNode(
+          //     'Clothing',
+          //     image: 'assets/images/heel.png',
+          //     color: Colors.yellow.shade500,
+          //   ),
+          //   CourseNode(
+          //     'Tools',
+          //     image: 'assets/images/hammer.png',
+          //     color: Colors.grey,
+          //     percent: 0.7,
+          //   ),
+          //   CourseNode(
+          //     'Emotions',
+          //     image: 'assets/images/emotion.png',
+          //     color: Colors.blue,
+          //     crown: 2,
+          //   ),
+          // ),
+          // const Padding(padding: EdgeInsets.all(10)),
+          // DoubleCourseNode(
+          //   CourseNode(
+          //     'Daily',
+          //     image: 'assets/images/dumbbell.png',
+          //     color: Colors.purple.shade200,
+          //     percent: 0.2,
+          //   ),
+          //   CourseNode(
+          //     'Travel',
+          //     image: 'assets/images/tree.png',
+          //     color: Colors.pink,
+          //   ),
+          // ),
+          // const Padding(padding: EdgeInsets.only(bottom: 15)),
         ],
       ),
     );

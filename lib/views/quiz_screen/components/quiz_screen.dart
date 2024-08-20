@@ -1,42 +1,39 @@
 import 'package:duolingo/util/api.dart';
+import 'package:duolingo/views/leaderboard_screen/leaderboard_screen.dart';
 import 'package:duolingo/views/lesson_screen/components/bottom_button.dart';
-import 'package:duolingo/views/lesson_screen/components/grid_lesson.dart';
 import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
-import 'package:duolingo/views/lesson_screen/components/list_lesson.dart';
+import 'package:duolingo/views/quiz_screen/components/list_quiz.dart';
 import 'package:flutter/material.dart';
 // import 'package:logging/logging.dart';
 
-// final Logger logger = Logger('LessonScreen');
+class QuizScreen extends StatefulWidget {
+  final String level;
 
-class LessonScreen extends StatefulWidget {
-  final String courseId;
-
-  // const LessonScreen({Key? key}) : super(key: key);
-  const LessonScreen ({ required this.courseId});
+  const QuizScreen ({ required this.level});
 
   @override
   State<StatefulWidget> createState() {
-    return LessonScreenState();
+    return QuizScreenState();
   }
 }
 
-class LessonScreenState extends State<LessonScreen> {
+class QuizScreenState extends State<QuizScreen> {
   double percent = 0.2;
   int index = 0;
   late List questions;
+  int score = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    // logger.info('in init load quesitons');
-    // questions = _loadQuestions(widget.courseId);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   Future<List<dynamic>> _loadQuestions(courseId) async {
-    logger.info('in load quesitons');
-    String url = "questions/all/cc0cfc6b-180a-4f21-a2f4-077391710866";
+    logger.info('fetching quiz questions');
+    String url = "quiz/level/" + widget.level;
     try {
       final response = await API.get(url);
+      // logger.info(response['questions']);
       return response['questions'];
     } catch (e) {
       logger.fine('in error');
@@ -47,26 +44,31 @@ class LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    logger.info('in build of lesson node');
+    // logger.info('in build of quiz node');
     var newLessons = [];
+    int points = 0;
     return FutureBuilder(
-      future: _loadQuestions(widget.courseId), 
+      future: _loadQuestions(widget.level), 
       builder: (context, snapshot) {        
         if(snapshot.hasData) {
           questions = snapshot.data as List<dynamic>;
-          // logger.info(questions);
-          // logger.info(questions[0]);
-          var newLessons = [];
+          logger.info(questions);
+          logger.info(questions[0]);
+          // var newLessons = [];
           for (int i=0; i< questions.length; i++) {
             newLessons.add(
-              ListLesson('Translate the sentence', questions[i]['text'],
+              ListQuiz('Translate the sentence', questions[i]['text'],
               [questions[i]['image_1'], questions[i]['image_2'], questions[i]['image_3'], questions[i]['image_4']],
-              questions[i]['answer'],
-              checkButton: bottomButton(context, 'Next')));
+              questions[i]['answer'], 5,
+              checkButton: bottomButton(context, 'NEXT'),
+              onOptionSelected: (points) {
+                
+                logger.info('Selected index: $points');
+                score = score + points;
+                logger.info('score is : $score');
+              }));
           }
           logger.info(newLessons);
-          newLessons.add(GridLesson(checkButton: bottomButton(context, 'Done')));
-
           return Scaffold(
             appBar: LessonAppBar(percent: percent),
             body: newLessons[index],
@@ -89,16 +91,25 @@ class LessonScreenState extends State<LessonScreen> {
         child: ElevatedButton(
           onPressed: () {
             setState(() {
-              if (index < 2) {
-                // percent += 0.4;
+              if (percent < 1) {
+                percent += 0.4;
                 index++;
               } else {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return dialog('Great job');
+                    // return Material(
+                    //   type: MaterialType.transparency,
+                    //   child: dialog('Great score $score ')
+                    // );
+                    return dialog('Great score $score ');
                   },
-                );
+                ).then((_) {
+                    // Navigator.pop(context);
+                    // Navigator.pop(context);
+                    Navigator.pushNamed(context, '/home');
+                });
+                
               }
             });
           },

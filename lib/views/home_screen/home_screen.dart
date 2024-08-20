@@ -2,11 +2,13 @@ import 'package:duolingo/views/course_screen/course_tree.dart';
 import 'package:duolingo/views/explore_screen/explore_screen.dart';
 import 'package:duolingo/views/home_screen/components/explore_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/leaderboard_app_bar.dart';
+import 'package:duolingo/views/home_screen/components/quiz_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/shop_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/stat_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/bottom_navigator.dart';
 import 'package:duolingo/views/leaderboard_screen/leaderboard_screen.dart';
 import 'package:duolingo/views/profile_screen/profile_screen.dart';
+import 'package:duolingo/views/quiz_screen/quiz_screen_levels.dart';
 import 'package:duolingo/views/shop_screen/shop_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       CourseTree(),
       ProfileScreen(),
       LeaderboardScreen(),
-      ShopScreen(),
+      QuizScreenLevels(),
       ExploreScreen(),
     ];
 
@@ -41,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       StatAppBar(),
       ProfileAppBar(),
       LeaderboardAppBar(),
-      ShopAppBar(),
+      QuizAppBar(),
       ExploreAppBar(),
     ];
 

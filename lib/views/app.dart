@@ -2,8 +2,10 @@ import 'package:duolingo/views/choose_language_screen/choose_language_screen.dar
 import 'package:duolingo/views/login_screen/login_screen.dart';
 import 'package:duolingo/views/welcome_screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:logging/logging.dart';
 import 'home_screen/home_screen.dart';
+
+final Logger logger = Logger('MyDuolingo');
 
 class MyDuolingo extends StatelessWidget {
   const MyDuolingo({Key? key}) : super(key: key);
