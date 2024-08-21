@@ -47,7 +47,7 @@ class LeaderboardScreen extends StatelessWidget {
                 contentPadding: const EdgeInsets.only(top: 17),
                 horizontalTitleGap: 12,
                 leading: rank(ranks[index]),
-                title: avatarWithName(images[index], leaderboard[index]['user_id'].toString().substring(0,5)),
+                title: avatarWithName(images[index], leaderboard[index]['username']),
                 trailing: xpAmount(leaderboard[index]['xp']),
               );
             },

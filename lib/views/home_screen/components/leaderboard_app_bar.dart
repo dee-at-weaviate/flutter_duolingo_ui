@@ -16,9 +16,9 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         children: [
           leagues(),
-          bigTitle('Amethyst League'),
+          bigTitle('Leaderboard'),
           message('Top 10 advance to the next league'),
-          remainingDay('2 days'),
+          remainingDay('Beat your friends in the next 2 days'),
         ],
       ),
     );

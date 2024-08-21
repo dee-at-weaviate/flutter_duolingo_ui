@@ -10,6 +10,7 @@ class ListQuiz extends StatelessWidget {
   List<String> answers;
   int correctAnswer;
   int difficulty;
+  // final ValueNotifier<Color> colorNotifier;
   final Function(int) onOptionSelected; 
 
 
@@ -17,7 +18,8 @@ class ListQuiz extends StatelessWidget {
     this.instructionText, this.question, 
     this.answers, this.correctAnswer,
     this.difficulty,
-    {required this.checkButton, 
+    {required this.checkButton,
+    // required this.colorNotifier, 
     required this.onOptionSelected, 
     Key? key}
     ) : super(key: key);
@@ -36,13 +38,13 @@ class ListQuiz extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                listChoice(context, answers[0], difficulty),
+                listChoice(context, answers[0], difficulty, ValueNotifier<Color>(Colors.white)),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[1], difficulty),
+                listChoice(context, answers[1], difficulty, ValueNotifier<Color>(Colors.white)),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[2], 3),
+                listChoice(context, answers[2], 3, ValueNotifier<Color>(Colors.white)),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[3], 4),
+                listChoice(context, answers[3], 4, ValueNotifier<Color>(Colors.white)),
               ],
             ),
           ),
@@ -53,29 +55,40 @@ class ListQuiz extends StatelessWidget {
     );
   }
 
-  listChoice(BuildContext context, String title, int difficulty) {
+  listChoice(BuildContext context, String title, int difficulty, ValueNotifier<Color> colorNotifier) {
     return GestureDetector(
       onTap: () {
-        // bool isCorrect = index == correctAnswer;
+        logger.info('tapped');
+        if (colorNotifier.value == Colors.white) {
+          colorNotifier.value = Colors.greenAccent;
+        } else {
+          colorNotifier.value = Colors.white;
+        }
+        // colorNotifier.value = Colors.greenAccent;
         onOptionSelected(difficulty);
       },
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(left: 15, right: 15),
-        padding: const EdgeInsets.all(15),
-        // onPress: {},
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            width: 2.5,
-            color: const Color(0xFFE5E5E5),
-          ),
-        ),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 17),
-        ),
-      ),
+      child: ValueListenableBuilder<Color>(
+        valueListenable: colorNotifier, 
+        builder: (context, color, child) {
+          return Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(left: 15, right: 15),
+            padding: const EdgeInsets.all(15),
+            // onPress: {},
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                width: 2.5,
+                color: const Color(0xFFE5E5E5),
+              ),
+            ),
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 17),
+            ),
+          );
+      })      
     );   
   }
 
