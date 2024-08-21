@@ -1,3 +1,5 @@
+import 'package:duolingo/util/api.dart';
+// import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -5,11 +7,24 @@ import 'dart:math';
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({Key? key}) : super(key: key);
 
+
+  Future<List<dynamic>> _showLeaderboard() async {
+    logger.info('fetching leaderboard');
+    String url = "leaderboard";
+    try {
+      final response = await API.get(url);
+      return response['leaderboard'];
+    } catch (e) {
+      logger.fine('in error');
+      logger.fine(e);
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    // generate mock data
     var ranks = List<int>.generate(30, (i) => i + 1);
+    late List leaderboard;
     Random random = Random();
     var xps = List<int>.generate(30, (i) => random.nextInt(1000));
     var nameList = ['White', 'Red', 'Blue', 'Yellow', 'Cyan', 'Black', 'Pink', 'Purple'];
@@ -19,17 +34,28 @@ class LeaderboardScreen extends StatelessWidget {
     var names = List<String>.generate(30, (i) => nameList[random.nextInt(nameList.length)]);
     var images = List<String>.generate(30, (i) => 'assets/images/' + imageList[random.nextInt(imageList.length)]);
 
-    return ListView.builder(
-      itemCount: 30,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          contentPadding: const EdgeInsets.only(top: 17),
-          horizontalTitleGap: 12,
-          leading: rank(ranks[index]),
-          title: avatarWithName(images[index], names[index]),
-          trailing: xpAmount(xps[index]),
-        );
-      },
+    return FutureBuilder(
+      future: _showLeaderboard(), 
+      builder: (context, snapshot) {        
+        if(snapshot.hasData) {
+          leaderboard = snapshot.data as List<dynamic>;
+          logger.info(leaderboard);
+          return ListView.builder(
+            itemCount: leaderboard.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                contentPadding: const EdgeInsets.only(top: 17),
+                horizontalTitleGap: 12,
+                leading: rank(ranks[index]),
+                title: avatarWithName(images[index], leaderboard[index]['user_id'].toString().substring(0,5)),
+                trailing: xpAmount(leaderboard[index]['xp']),
+              );
+            },
+          );
+        }  else {
+          return Text('empty');
+        } 
+      }
     );
   }
 

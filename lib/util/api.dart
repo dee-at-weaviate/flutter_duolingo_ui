@@ -20,12 +20,18 @@ class API {
 
   static Future<dynamic> post(String endpoint, String data) async {
     logger.info('in post');
-    logger.info(endpoint);
-    final response = await http.post(Uri.parse(baseUrl + endpoint), body: data);
+    logger.info(data);
+    final response = await http.post(
+                Uri.parse(baseUrl + endpoint), 
+                body: data,
+                headers: {
+                  'Content-Type': 'application/json',  
+                });
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to load data from server');
     }
   }
+
 }

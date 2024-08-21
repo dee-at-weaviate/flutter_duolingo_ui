@@ -4,6 +4,7 @@ import 'package:duolingo/views/lesson_screen/components/bottom_button.dart';
 import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
 import 'package:duolingo/views/quiz_screen/components/list_quiz.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 // import 'package:logging/logging.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -21,12 +22,25 @@ class QuizScreenState extends State<QuizScreen> {
   double percent = 0.2;
   int index = 0;
   late List questions;
-  int score = 0;
+  int totalScore = 0;
+  int currentScore = 0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  void _postScoretoLeaderboard(userID, totalScore) async {
+    try {
+      String url = "quiz/score";
+      final Map<String, dynamic> data = {
+        'user_id': userID,
+        'totalScore' : totalScore
+      };
+      final response = await API.post(url, json.encode(data));
+      logger.info(response);
+      // response['questions'];
+    } catch (e) {
+      logger.fine('in error');
+      logger.fine(e);
+      // return [];
+    }
+  }
 
   Future<List<dynamic>> _loadQuestions(courseId) async {
     logger.info('fetching quiz questions');
@@ -46,7 +60,7 @@ class QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     // logger.info('in build of quiz node');
     var newLessons = [];
-    int points = 0;
+    // int points = 0;
     return FutureBuilder(
       future: _loadQuestions(widget.level), 
       builder: (context, snapshot) {        
@@ -61,11 +75,9 @@ class QuizScreenState extends State<QuizScreen> {
               [questions[i]['image_1'], questions[i]['image_2'], questions[i]['image_3'], questions[i]['image_4']],
               questions[i]['answer'], 5,
               checkButton: bottomButton(context, 'NEXT'),
-              onOptionSelected: (points) {
-                
-                logger.info('Selected index: $points');
-                score = score + points;
-                logger.info('score is : $score');
+              onOptionSelected: (points) {                
+                currentScore = points;
+                logger.info('currentScore: $currentScore');
               }));
           }
           logger.info(newLessons);
@@ -91,22 +103,19 @@ class QuizScreenState extends State<QuizScreen> {
         child: ElevatedButton(
           onPressed: () {
             setState(() {
+              totalScore += currentScore;
               if (percent < 1) {
-                percent += 0.4;
+                percent += 0.4;                
+                logger.info('totalScore: $totalScore');
                 index++;
               } else {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    // return Material(
-                    //   type: MaterialType.transparency,
-                    //   child: dialog('Great score $score ')
-                    // );
-                    return dialog('Great score $score ');
+                    _postScoretoLeaderboard('4f6d053f-5d19-487f-b9e3-8898dc977230', totalScore);
+                    return dialog('Great score $totalScore ');
                   },
                 ).then((_) {
-                    // Navigator.pop(context);
-                    // Navigator.pop(context);
                     Navigator.pushNamed(context, '/home');
                 });
                 
