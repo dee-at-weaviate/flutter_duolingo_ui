@@ -11,10 +11,8 @@ class CenterDisplay extends StatelessWidget {
         children: [
           Image.asset('assets/images/duo-wave.png', height: 150),
           Container(padding: const EdgeInsets.all(5)),
-          Text('Wealingo',
-              style: TextStyle(fontSize: 20, color: Colors.green)),
-          // Image.asset('assets/images/duolingo-logo.png',
-          //     width: 125, height: 40),
+          Image.asset('assets/images/duolingo-logo.png',
+              width: 125, height: 40),
           Container(padding: const EdgeInsets.all(5)),
           Text('Learn a language for free.',
               style: TextStyle(fontSize: 20, color: Colors.grey.shade600)),

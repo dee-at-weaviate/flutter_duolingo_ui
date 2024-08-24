@@ -1,6 +1,4 @@
-import 'package:duolingo/util/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const StatAppBar({Key? key}) : super(key: key);
@@ -10,12 +8,6 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
-    String? username;
-    if(user != null) {
-      username = user.name;
-    }
-
     return AppBar(
       toolbarHeight: 120,
       backgroundColor: Colors.white,
@@ -26,7 +18,7 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
           const Padding(padding: EdgeInsets.all(20)),
           crown(136),
           const Padding(padding: EdgeInsets.all(20)),
-          streak(31, username),
+          streak(31),
         ],
       ),
       actions: [
@@ -53,7 +45,7 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget streak(int n, username) {
+  Widget streak(int n) {
     return Row(
       children: [
         Image.asset(
@@ -64,7 +56,7 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(4),
         ),
         Text(
-          username,
+          '$n',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Color(0xFFFF9600),
