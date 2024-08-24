@@ -1,5 +1,8 @@
 import 'package:duolingo/shared/firebase_authentication.dart';
+import 'package:duolingo/util/user_provider.dart';
+import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GoogleButton extends StatefulWidget {
   final FirebaseAuthentication auth;
@@ -61,7 +64,20 @@ class GoogleButtonState extends State<GoogleButton> {
         });
       } else {
         setState(() {
-          print('Google good: $value');
+          // print('Google good: $value');
+          logger.info(value);
+          logger.info(value.user);
+          String? name = value.user?.displayName;
+          String? email = value.user?.email;
+          logger.info(name);
+          logger.info(email);
+          User user = User(name: name , email: email);
+          Provider.of<UserProvider>(context, listen: false).setUser(user);
+
+          
+        
+        // Navigate to the home screen
+          Navigator.pushNamed(context, '/home');
 
           // _message = 'User $value successfully logged in with Google';
         });

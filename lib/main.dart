@@ -1,6 +1,9 @@
+import 'package:duolingo/util/user_provider.dart';
 import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   Logger.root.level = Level.ALL; // Set the log level (e.g., Level.INFO, Level.DEBUG)
@@ -11,7 +14,16 @@ void main() {
   Logger.root.onRecord.listen((record) {
     print('${record.loggerName} : [${record.level.name}] (${record.sequenceNumber}): ${record.message}');
   });
-  runApp(MyDuolingo());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MyDuolingo(),
+    ),
+  );
+  // runApp(MyDuolingo());
 }
 
 // class MyApp extends StatelessWidget {
