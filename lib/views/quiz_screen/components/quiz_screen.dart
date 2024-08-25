@@ -1,10 +1,13 @@
 import 'package:duolingo/util/api.dart';
+import 'package:duolingo/util/user_provider.dart';
 import 'package:duolingo/views/leaderboard_screen/leaderboard_screen.dart';
 import 'package:duolingo/views/lesson_screen/components/bottom_button.dart';
 import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
 import 'package:duolingo/views/quiz_screen/components/list_quiz.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:provider/provider.dart';
 // import 'package:logging/logging.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -34,7 +37,6 @@ class QuizScreenState extends State<QuizScreen> {
       };
       final response = await API.post(url, json.encode(data));
       logger.info(response);
-      // response['questions'];
     } catch (e) {
       logger.fine('in error');
       logger.fine(e);
@@ -59,8 +61,8 @@ class QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     // logger.info('in build of quiz node');
-    var newLessons = [];
-    // int points = 0;
+    var newLessons = [];    
+
     return FutureBuilder(
       future: _loadQuestions(widget.level), 
       builder: (context, snapshot) {        
@@ -95,6 +97,13 @@ class QuizScreenState extends State<QuizScreen> {
 
 
   bottomButton(BuildContext context, String title) {
+    final user = Provider.of<UserProvider>(context).user;
+    String? userID;
+    
+    if(user != null) {
+      userID = user.userID;
+    }
+
     return Center(
       child: Container(
         width: double.infinity,
@@ -112,7 +121,7 @@ class QuizScreenState extends State<QuizScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    _postScoretoLeaderboard('4f6d053f-5d19-487f-b9e3-8898dc977230', totalScore);
+                    _postScoretoLeaderboard(userID, totalScore);
                     return dialog('Great score $totalScore ');
                   },
                 ).then((_) {

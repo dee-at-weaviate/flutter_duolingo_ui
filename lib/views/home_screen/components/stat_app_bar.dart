@@ -30,12 +30,12 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
-        heart(),
+        heart(username),
       ],
     );
   }
 
-  Widget heart() {
+  Widget heart(username) {
     return Row(
       children: [
         Image.asset(
@@ -45,7 +45,14 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
         const Padding(
           padding: EdgeInsets.all(2),
         ),
-        Image.asset('assets/images/infinity.png', width: 20),
+        // Image.asset('assets/images/infinity.png', width: 20),
+        Text(
+          username,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFFF9600),
+          ),
+        ),
         const Padding(
           padding: EdgeInsets.all(5),
         ),
@@ -64,7 +71,7 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(4),
         ),
         Text(
-          username,
+          '$n',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Color(0xFFFF9600),

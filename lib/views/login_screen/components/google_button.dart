@@ -1,8 +1,10 @@
 import 'package:duolingo/shared/firebase_authentication.dart';
 import 'package:duolingo/util/user_provider.dart';
-import 'package:duolingo/views/app.dart';
+// import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:duolingo/util/api.dart';
+import 'dart:convert';
 
 class GoogleButton extends StatefulWidget {
   final FirebaseAuthentication auth;
@@ -15,6 +17,27 @@ class GoogleButton extends StatefulWidget {
 }
 
 class GoogleButtonState extends State<GoogleButton> {
+
+  Future<User> createNewUser(username, email) async {
+    try {
+      String url = "user/new";
+      final Map<String, dynamic> data = {
+        'username': username,
+        'email' : email
+      };
+      final response = await API.post(url, json.encode(data));
+      logger.info('back from post create new user');
+      logger.info(response);  
+      User user = User(name: response['username'] , email: response['email'], userID: response['user_id']);
+      return user;
+    } catch (e) {
+      logger.fine('in error');
+      logger.fine(e);
+      return Future.error(e);
+      // return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -56,31 +79,20 @@ class GoogleButtonState extends State<GoogleButton> {
   }
 
   googlePressed() {
-    widget.auth.loginWithGoogle().then((value) {
+    widget.auth.loginWithGoogle().then((value) async {
       if (value == null) {
-        setState(() {
-          print('Google failed');
-          // _message = 'Google Login Error';
-        });
+        // setState(() {
+          logger.fine('Google auth failed');
+        // });
       } else {
-        setState(() {
-          // print('Google good: $value');
+        // setState(() async {
           logger.info(value);
-          logger.info(value.user);
           String? name = value.user?.displayName;
           String? email = value.user?.email;
-          logger.info(name);
-          logger.info(email);
-          User user = User(name: name , email: email);
-          Provider.of<UserProvider>(context, listen: false).setUser(user);
-
-          
-        
-        // Navigate to the home screen
+          User user = await createNewUser(name, email);   
+          Provider.of<UserProvider>(context, listen: false).setUser(user);   
           Navigator.pushNamed(context, '/home');
-
-          // _message = 'User $value successfully logged in with Google';
-        });
+        // });
       }
     });
   }
