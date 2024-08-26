@@ -13,7 +13,7 @@ class PolicyText extends StatelessWidget {
           color: Colors.grey.shade600,
         ),
         children: const <TextSpan>[
-          TextSpan(text: 'By signing in to Duolingo, you agree to our '),
+          TextSpan(text: 'By signing in to Wealingo, you agree to our '),
           TextSpan(
               text: 'Terms', style: TextStyle(fontWeight: FontWeight.bold)),
           TextSpan(text: ' and '),

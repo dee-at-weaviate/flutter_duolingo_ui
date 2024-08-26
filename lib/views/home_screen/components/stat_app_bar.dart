@@ -1,4 +1,5 @@
 import 'package:duolingo/util/user_provider.dart';
+import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,10 +11,16 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
     String? username;
-    if(user != null) {
-      username = user.name;
+    try {
+      final user = Provider.of<UserProvider>(context).user;      
+      if(user != null) {
+        username = user.name;
+      } else {
+        username = 'Guest';
+      }
+    } catch (e) {
+      logger.finer(e);
     }
 
     return AppBar(

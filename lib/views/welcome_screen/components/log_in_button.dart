@@ -23,7 +23,7 @@ class LogInButton extends StatelessWidget {
           // );
         },
         child: const Text(
-          'I ALREADY HAVE AN ACCOUNT',
+          'I WANT TO CREATE ACCOUNT',
           style: TextStyle(
               color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
         ),

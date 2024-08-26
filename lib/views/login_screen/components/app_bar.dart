@@ -12,7 +12,7 @@ class LoginAppBar extends StatelessWidget implements PreferredSizeWidget {
       shadowColor: Colors.transparent,
       backgroundColor: Colors.transparent,
       title: Text(
-        'Enter your details',
+        'LOGIN PAGE',
         style:
         TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.bold),
       ),
@@ -23,7 +23,8 @@ class LoginAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: Colors.grey.shade600,
         ),
         onPressed: () {
-          Navigator.pop(context);
+          // Navigator.pop(context);
+          Navigator.pushNamed(context, '/home');
         },
       ),
     );

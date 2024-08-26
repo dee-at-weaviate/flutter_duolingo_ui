@@ -3,26 +3,39 @@ import 'package:duolingo/views/lesson_screen/components/bottom_button.dart';
 import 'package:duolingo/views/lesson_screen/components/stage_changed.dart';
 import 'package:flutter/material.dart';
 
-class ListQuiz extends StatelessWidget {
-  Widget checkButton;
-  String instructionText;
-  String question;
-  List<String> answers;
-  int correctAnswer;
-  int difficulty;
-  // final ValueNotifier<Color> colorNotifier;
+class ListQuiz extends StatefulWidget {
+  final Widget checkButton;
+  final String instructionText;
+  final String question;
+  final List<String> answers;
+  final int correctAnswer;
+  final int difficulty;
   final Function(int) onOptionSelected; 
 
+  @override
+  State<StatefulWidget> createState() {
+    return _ListQuizState();
+  }
 
   ListQuiz(
     this.instructionText, this.question, 
     this.answers, this.correctAnswer,
     this.difficulty,
     {required this.checkButton,
-    // required this.colorNotifier, 
     required this.onOptionSelected, 
     Key? key}
     ) : super(key: key);
+
+}
+
+class _ListQuizState extends State<ListQuiz> {  
+  int? _selectedIndex;
+
+  void resetSelection() {
+    setState(() {
+      _selectedIndex = null; // Reset the selected index
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,53 +43,47 @@ class ListQuiz extends StatelessWidget {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        instruction(instructionText),
+        instruction(widget.instructionText),
         const Padding(padding: EdgeInsets.only(top: 15)),
-        questionRow(question),
+        questionRow(widget.question),
         Expanded(
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                listChoice(context, answers[0], difficulty, ValueNotifier<Color>(Colors.white)),
+                listChoice(context, widget.answers[0], widget.difficulty, 0),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[1], difficulty, ValueNotifier<Color>(Colors.white)),
+                listChoice(context, widget.answers[1], widget.difficulty, 1),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[2], 3, ValueNotifier<Color>(Colors.white)),
+                listChoice(context, widget.answers[2], 3, 2),
                 const Padding(padding: EdgeInsets.only(bottom: 15),),
-                listChoice(context, answers[3], 4, ValueNotifier<Color>(Colors.white)),
+                listChoice(context, widget.answers[3], 4, 3),
               ],
             ),
           ),
         ),
         const Spacer(),
-        checkButton,
+        widget.checkButton,
       ],
     );
   }
 
-  listChoice(BuildContext context, String title, int difficulty, ValueNotifier<Color> colorNotifier) {
+  listChoice(BuildContext context, String title, int difficulty, int index) {
     return GestureDetector(
       onTap: () {
         logger.info('tapped');
-        if (colorNotifier.value == Colors.white) {
-          colorNotifier.value = Colors.greenAccent;
-        } else {
-          colorNotifier.value = Colors.white;
-        }
-        // colorNotifier.value = Colors.greenAccent;
-        onOptionSelected(difficulty);
+        setState(() {
+          _selectedIndex = (_selectedIndex == index) ? null : index;
+        });
+        widget.onOptionSelected(difficulty);
       },
-      child: ValueListenableBuilder<Color>(
-        valueListenable: colorNotifier, 
-        builder: (context, color, child) {
-          return Container(
+      child: Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left: 15, right: 15),
             padding: const EdgeInsets.all(15),
             // onPress: {},
             decoration: BoxDecoration(
-              color: color,
+              color: _selectedIndex == index ? Colors.greenAccent : Colors.white,
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
                 width: 2.5,
@@ -87,8 +94,8 @@ class ListQuiz extends StatelessWidget {
               title,
               style: const TextStyle(fontSize: 17),
             ),
-          );
-      })      
+          )
+            
     );   
   }
 

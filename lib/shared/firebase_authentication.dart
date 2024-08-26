@@ -16,6 +16,15 @@ class FirebaseAuthentication {
     }
   }
 
+  Future<String?> loginWithUserID(String userID) async {
+    try {
+      UserCredential credential = await _firebaseAuth.signInAnonymously();
+      return credential.user!.uid;
+    } on FirebaseAuthException {
+      return null;
+    }
+  }
+
   Future<String?> login(String email, String password) async {
     try {
       UserCredential credential = await _firebaseAuth

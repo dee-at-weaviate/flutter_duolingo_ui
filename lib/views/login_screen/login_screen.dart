@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'components/app_bar.dart';
 import 'components/input_field.dart';
 import '../../firebase_options.dart';
+import 'dart:math';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -22,8 +23,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   late FirebaseAuthentication auth;
   late Future<void> _firebaseInitialization;
@@ -46,6 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  String generateRandomUsername() {
+    const length = 15;
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +69,56 @@ class _LoginScreenState extends State<LoginScreen> {
 
         return Scaffold(
           appBar: const LoginAppBar(),
-          body: Container(
-            margin: const EdgeInsets.only(bottom: 10),
+          body: Center(
             child: Column(
               children: [
-                Form(
-                  key: formKey,
-                  child: InputField(emailController, passwordController),
+                Text(
+                  'Create Username',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF1CB0F6)),
                 ),
-                // Text(loginMessage),
+                SizedBox(height: 10),
+                Container(
+                  width: 300,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: TextField(
+                    controller: _usernameController,
+                    maxLength: 15,                  
+                    decoration: const InputDecoration(
+                      labelText: 'Enter Username',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0))
+                        ),
+                      hintText: 'Username or email',
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _usernameController.text = generateRandomUsername();
+                    });
+                  },
+                  child: Text('Generate Username'),
+                ),
+                SizedBox(height: 30),                
                 // Container(margin: const EdgeInsets.only(top: 10)),
-                LoginButton(auth, emailController, passwordController),
-                Container(margin: const EdgeInsets.only(top: 10)),
-                ForgotPassword(),
-                bottomDisplay(),
+                LoginButton(auth, _usernameController),
+                SizedBox(height: 70),  
+                Text(
+                  'OR Login with',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF1CB0F6)),
+                ),
+                Container(margin: const EdgeInsets.only(top: 30)),
+                Container(
+                  height: 60,
+                  width: 200,
+                  child: GoogleButton(auth),
+                ),    
+                // bottomDisplay(),
               ],
             ),
           ),
@@ -84,20 +128,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bottomDisplay() {
-    return Expanded(
+    return Container(
       child: Align(
-        alignment: FractionalOffset.bottomCenter,
+        // alignment: FractionalOffset.bottomCenter,
+        alignment: Alignment.bottomCenter,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                FacebookButton(),
-                GoogleButton(auth),
-              ],
-            ),
             PolicyText(),
+            SizedBox(height: 10)
           ],
         ),
       ),

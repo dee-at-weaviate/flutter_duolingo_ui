@@ -1,12 +1,15 @@
 import 'package:duolingo/shared/firebase_authentication.dart';
+import 'package:duolingo/util/user_provider.dart';
+import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginButton extends StatefulWidget {
   final FirebaseAuthentication auth;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
+  final TextEditingController _usernameController;
+  // final TextEditingController passwordController;
 
-  const LoginButton(this.auth, this.emailController, this.passwordController,
+  const LoginButton(this.auth, this._usernameController,
       {Key? key})
       : super(key: key);
 
@@ -26,13 +29,13 @@ class LoginButtonState extends State<LoginButton> {
         Text(loginMessage),
         Container(padding: const EdgeInsets.all(5)),
         Container(
-          width: double.infinity,
+          width: 250,
           height: 50,
           margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
           padding: const EdgeInsets.only(bottom: 2),
           child: ElevatedButton(
             child: const Text(
-              'SIGN IN',
+              'Sign in with username',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -54,39 +57,18 @@ class LoginButtonState extends State<LoginButton> {
   }
 
   loginPressed() {
-    String userId = '';
-    String email = widget.emailController.text;
-    String password = widget.passwordController.text;
-    widget.auth.login(email, password).then((value) {
-      print('Login Info: ${email} - ${password}');
+    String username = widget._usernameController.text;
+    // String password = widget.passwordController.text;
+    widget.auth.loginWithUserID(username).then((value) async {
       if (value == null) {
-        setState(() {
-          print('login failed');
-          loginMessage = 'Login Error';
-        });
+          logger.fine('user id auth failed');
       } else {
-        userId = value;
-        setState(() {
-          print('login successfully');
-          loginMessage = 'User $userId successfully logged in';
-        });
+          logger.info(value);
+          // String? username = value;
+          User user = await User.createNew(username, 'anon');   
+          Provider.of<UserProvider>(context, listen: false).setUser(user);   
+          Navigator.pushNamed(context, '/home');
       }
     });
   }
 }
-
-////// create user
-// else {
-// auth.createUser(txtUserName.text, txtPassword.text).then((value) {
-// if (value == null) {
-// setState(() {
-// _message = 'Registration Error';
-// });
-// } else {
-// userId = value;
-// setState(() {
-// _message = 'User $userId successfully signed in';
-// });
-// }
-// });
-// };

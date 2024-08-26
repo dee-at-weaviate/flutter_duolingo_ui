@@ -18,32 +18,10 @@ class GoogleButton extends StatefulWidget {
 
 class GoogleButtonState extends State<GoogleButton> {
 
-  Future<User> createNewUser(username, email) async {
-    try {
-      String url = "user/new";
-      final Map<String, dynamic> data = {
-        'username': username,
-        'email' : email
-      };
-      final response = await API.post(url, json.encode(data));
-      logger.info('back from post create new user');
-      logger.info(response);  
-      User user = User(name: response['username'] , email: response['email'], userID: response['user_id']);
-      return user;
-    } catch (e) {
-      logger.fine('in error');
-      logger.fine(e);
-      return Future.error(e);
-      // return [];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-        width: double.infinity,
+    return Container(
+        // width: double.infinity,
         height: 50,
         margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         decoration: BoxDecoration(
@@ -74,7 +52,7 @@ class GoogleButtonState extends State<GoogleButton> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
-      ),
+      // ),
     );
   }
 
@@ -89,7 +67,7 @@ class GoogleButtonState extends State<GoogleButton> {
           logger.info(value);
           String? name = value.user?.displayName;
           String? email = value.user?.email;
-          User user = await createNewUser(name, email);   
+          User user = await User.createNew(name, email);   
           Provider.of<UserProvider>(context, listen: false).setUser(user);   
           Navigator.pushNamed(context, '/home');
         // });

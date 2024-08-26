@@ -1,12 +1,9 @@
 import 'package:duolingo/util/api.dart';
-// import 'package:duolingo/views/app.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({Key? key}) : super(key: key);
-
 
   Future<List<dynamic>> _showLeaderboard() async {
     logger.info('fetching leaderboard');
@@ -23,6 +20,7 @@ class LeaderboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     var ranks = List<int>.generate(30, (i) => i + 1);
     late List leaderboard;
     Random random = Random();
