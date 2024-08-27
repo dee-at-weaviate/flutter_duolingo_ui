@@ -34,7 +34,7 @@ class LessonScreenState extends State<LessonScreen> {
 
   Future<List<dynamic>> _loadQuestions(courseId) async {
     logger.info('in load quesitons');
-    String url = "questions/all/cc0cfc6b-180a-4f21-a2f4-077391710866";
+    String url = "questions/all/7880a7cd-705c-4989-809a-db16a3ca1701";
     try {
       final response = await API.get(url);
       return response['questions'];
@@ -60,7 +60,7 @@ class LessonScreenState extends State<LessonScreen> {
           for (int i=0; i< questions.length; i++) {
             newLessons.add(
               ListLesson('Translate the sentence', questions[i]['text'],
-              [questions[i]['image_1'], questions[i]['image_2'], questions[i]['image_3'], questions[i]['image_4']],
+              [questions[i]['option_1'], questions[i]['option_2'], questions[i]['option_3'], questions[i]['option_4']],
               questions[i]['answer'],
               checkButton: bottomButton(context, 'Next')));
           }

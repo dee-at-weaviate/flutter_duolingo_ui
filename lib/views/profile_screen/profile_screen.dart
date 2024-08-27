@@ -19,11 +19,11 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: const [
               Padding(padding: EdgeInsets.all(10)),
-              FriendUpdates(),
+              // FriendUpdates(),
               Statistics(),
-              FriendSuggestions(),
-              Friends(),
-              Achievements(),
+              // FriendSuggestions(),
+              // Friends(),
+              // Achievements(),
               // Expanded(child: Column(children: [Text('yo')],)),
             ],
           ),

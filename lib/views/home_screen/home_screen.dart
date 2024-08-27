@@ -42,7 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<PreferredSizeWidget> appBars = [
       StatAppBar(),
       ProfileAppBar(),
-      LeaderboardAppBar(),
+      // LeaderboardAppBar(),
+      ProfileAppBar(),
       QuizAppBar(),
       ExploreAppBar(),
     ];

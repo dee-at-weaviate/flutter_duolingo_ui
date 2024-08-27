@@ -20,8 +20,8 @@ class Statistics extends StatelessWidget {
           children: [
             statBox('assets/images/streak.png', '34', 'Day Streak'),
             statBox('assets/images/electric.png', '1770', 'Total XP'),
-            statBox('assets/images/pearl.png', 'Pearl', 'Current League'),
-            statBox('assets/images/chest.png', '7', 'Top 3 Finishes'),
+            // statBox('assets/images/pearl.png', 'Pearl', 'Current League'),
+            // statBox('assets/images/chest.png', '7', 'Top 3 Finishes'),
           ],
         ),
       ],
