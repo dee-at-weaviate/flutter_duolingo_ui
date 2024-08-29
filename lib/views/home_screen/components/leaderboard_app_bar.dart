@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:duolingo/util/user_provider.dart';
+import 'package:duolingo/views/app.dart';
+import 'package:provider/provider.dart';
+
 
 class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   const LeaderboardAppBar({Key? key}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(250);
+ 
 
   @override
   Widget build(BuildContext context) {
+
+    String? username;
+    String? email;
+    try {
+      final user = Provider.of<UserProvider>(context).user;      
+      if(user != null) {
+        username = user.name;
+        email = user.email;
+      } else {
+        username = 'Guest';
+        email = "";
+      }
+    } catch (e) {
+      logger.finer(e);
+    }
+    
     return AppBar(
       toolbarHeight: 250,
       automaticallyImplyLeading: false,
@@ -17,8 +38,8 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           leagues(),
           bigTitle('Leaderboard'),
-          message('Top 10 advance to the next league'),
-          remainingDay('Beat your friends in the next 2 days'),
+          message(username),
+          remainingDay(email),
         ],
       ),
     );
@@ -54,7 +75,7 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  remainingDay(String text) {
+  remainingDay(text) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Text(
@@ -68,7 +89,7 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  message(String text) {
+  message(text) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Text(
@@ -81,7 +102,7 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  bigTitle(String text) {
+  bigTitle(text) {
     return Container(
       margin: const EdgeInsets.only(top: 15),
       child: Text(

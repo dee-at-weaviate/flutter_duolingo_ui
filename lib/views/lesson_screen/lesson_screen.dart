@@ -48,7 +48,7 @@ class LessonScreenState extends State<LessonScreen> {
   @override
   Widget build(BuildContext context) {
     logger.info('in build of lesson node');
-    var newLessons = [];
+    // var newLessons = [];
     return FutureBuilder(
       future: _loadQuestions(widget.courseId), 
       builder: (context, snapshot) {        

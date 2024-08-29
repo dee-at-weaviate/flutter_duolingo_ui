@@ -1,3 +1,4 @@
+import 'package:duolingo/views/leaderboard_screen/leaderboard_screen.dart';
 import 'package:duolingo/views/profile_screen/components/account_app_bar.dart';
 import 'package:duolingo/views/profile_screen/components/achievements.dart';
 import 'package:duolingo/views/profile_screen/components/friend_suggestions.dart';
@@ -21,6 +22,7 @@ class ProfileScreen extends StatelessWidget {
               Padding(padding: EdgeInsets.all(10)),
               // FriendUpdates(),
               Statistics(),
+              LeaderboardScreen(),
               // FriendSuggestions(),
               // Friends(),
               // Achievements(),

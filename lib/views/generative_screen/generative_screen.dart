@@ -1,14 +1,14 @@
 import 'package:duolingo/util/api.dart';
-import 'package:duolingo/views/lesson_screen/lesson_screen.dart';
+import 'package:duolingo/views/home_screen/components/generative_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class ExploreScreen extends StatelessWidget {
-  final String searchInput;
-  const ExploreScreen(this.searchInput, {Key? key}) : super(key: key);
+class GenerativeScreen extends StatelessWidget {
+  final String? category;
+  const GenerativeScreen(this.category, {Key? key}) : super(key: key);
 
   Future<List<dynamic>> _generateQuestions() async {
     logger.info('in generate quesitons');
-    String url = "questions/search/$searchInput";
+    String url = "questions/create/$category";
     try {
       final response = await API.get(url);
       return response['questions'];
@@ -22,7 +22,7 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     logger.info('in build of generative screen quesitons');
     return Scaffold(
-      appBar: GenerativeAppBar(), // The app bar is rendered immediately
+      // appBar: GenerativeAppBar(), // The app bar is rendered immediately
       body: FutureBuilder(
         future: _generateQuestions(), 
         builder: (context, snapshot) {
@@ -50,54 +50,10 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        const Padding(padding: EdgeInsets.only(bottom: 5)),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const LessonScreen(courseId: "cc0cfc6b-180a-4f21-a2f4-077391710866",),
-              ),
-            );
-          },
-          child: newsBox(
-              'assets/images/news-1.png',
-              'Stop! Grammar time!',
-              'We have a few tricks up our sleeves for practicing grammar rules and patterns.',
-              'May 19'),
-        ),
-        newsBox(
-            'assets/images/news-2.png',
-            'Duolingo ABC is now available!',
-            'Learn more about the app that helps your child learn-and love!-to read.',
-            'May 17'),
-        newsBox(
-            'assets/images/news-3.png',
-            'What\'s it like to work at Duolingo?',
-            'We asked one of our engineers to share a little bit about her experience. Check it out!',
-            'May 12'),
-        newsBox(
-            'assets/images/news-4.png',
-            'Repeat after me',
-            'Or at least try these pronunciation tips for learning the sounds of your new language.',
-            'May 11'),
-        newsBox(
-            'assets/images/news-5.png',
-            'What\'s the most popular language among Gen Z',
-            'We looked at the data to see what languages different generations tend to study, and we noticed a few cool trends.',
-            'May 2'),
-        const Padding(padding: EdgeInsets.only(top: 15))
-      ],
-    );
-  }
-
-  newsBox(String image, String title, String description, String date) {
+  newsBox(String image, String question, String answer, String instruction) {
     return Container(
       // height: 100,
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 5, top: 15, left: 15, right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
@@ -108,22 +64,22 @@ class ExploreScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          imageBox(image),
-          newsTitle(title),
-          newsDescription(description),
-          newsDate(date),
+          // imageBox(image),
+          newsTitle(question),
+          newsDescription(answer),
+          newsDate(instruction),
         ],
       ),
     );
   }
 
-  newsDate(String date) {
+  newsDate(String instruction) {
     return Container(
       margin: const EdgeInsets.only(left: 15, bottom: 5),
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
         child: Text(
-          date,
+          instruction,
           style: const TextStyle(
             fontSize: 15,
             // fontWeight: FontWeight.bold,
@@ -134,11 +90,11 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  newsDescription(String description) {
+  newsDescription(String answer) {
     return Container(
       margin: const EdgeInsets.only(left: 15, bottom: 10),
       child: Text(
-        description,
+        answer,
         style: const TextStyle(
           fontSize: 17,
           // fontWeight: FontWeight.bold,
@@ -148,15 +104,15 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  newsTitle(String title) {
+  newsTitle(String question) {
     return Container(
       margin: const EdgeInsets.only(left: 15, bottom: 10),
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
         child: Text(
-          title,
+          question,
           style: const TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF4B4B4B),
           ),
@@ -177,7 +133,7 @@ class ExploreScreen extends StatelessWidget {
       ),
       child: Image.asset(
         image,
-        height: 150,
+        height: 100,
         width: double.infinity,
       ),
     );

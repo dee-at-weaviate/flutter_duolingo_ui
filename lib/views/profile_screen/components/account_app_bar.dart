@@ -32,7 +32,12 @@ class AccountAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 1.5,
       leading: account(username, email),
       leadingWidth: 500,
-      centerTitle: false,
+      centerTitle: true,
+      title: Column(
+        children: [
+          bigTitle('Leaderboard'),
+        ],
+      ),
       actions: [
         avatar(),
       ],
@@ -46,6 +51,20 @@ class AccountAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: Colors.transparent,
         backgroundImage: AssetImage('assets/images/profile.jpg'),
         radius: 37,
+      ),
+    );
+  }
+
+  bigTitle(String text) {
+    return Container(
+      margin: const EdgeInsets.only(top: 15),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF4B4B4B),
+        ),
       ),
     );
   }

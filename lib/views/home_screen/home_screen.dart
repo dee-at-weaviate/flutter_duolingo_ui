@@ -1,12 +1,16 @@
 import 'package:duolingo/views/course_screen/course_tree.dart';
 import 'package:duolingo/views/explore_screen/explore_screen.dart';
+import 'package:duolingo/views/generative_screen/generative_alert.dart';
+import 'package:duolingo/views/generative_screen/generative_screen.dart';
 import 'package:duolingo/views/home_screen/components/explore_app_bar.dart';
+import 'package:duolingo/views/home_screen/components/generative_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/leaderboard_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/quiz_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/shop_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/stat_app_bar.dart';
 import 'package:duolingo/views/home_screen/components/bottom_navigator.dart';
 import 'package:duolingo/views/leaderboard_screen/leaderboard_screen.dart';
+import 'package:duolingo/views/profile_screen/components/account_app_bar.dart';
 import 'package:duolingo/views/profile_screen/profile_screen.dart';
 import 'package:duolingo/views/quiz_screen/quiz_screen_levels.dart';
 import 'package:duolingo/views/shop_screen/shop_screen.dart';
@@ -33,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final screens = [
       CourseTree(),
-      ProfileScreen(),
+      GenerativeAlertScreen(),
+      // ProfileScreen(),
       LeaderboardScreen(),
       QuizScreenLevels(),
       ExploreScreen(),
@@ -41,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final List<PreferredSizeWidget> appBars = [
       StatAppBar(),
-      ProfileAppBar(),
-      // LeaderboardAppBar(),
-      ProfileAppBar(),
+      GenerativeAppBar(),
+      // ProfileAppBar(),
+      LeaderboardAppBar(),
       QuizAppBar(),
       ExploreAppBar(),
     ];

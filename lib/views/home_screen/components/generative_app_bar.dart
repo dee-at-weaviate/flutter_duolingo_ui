@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ExploreAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ExploreAppBar({Key? key}) : super(key: key);
+class GenerativeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const GenerativeAppBar({Key? key}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(55);
@@ -14,7 +14,7 @@ class ExploreAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 1.5,
       centerTitle: true,
       title: const Text(
-        'Search ',
+        'Generate your own tutor',
         style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
       ),
     );
