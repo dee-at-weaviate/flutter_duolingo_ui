@@ -58,7 +58,12 @@ class LoginButtonState extends State<LoginButton> {
 
   loginPressed() {
     String username = widget._usernameController.text;
-    // String password = widget.passwordController.text;
+    if (username.isEmpty) {
+      logger.fine('Username cannot be empty');
+      _showSnackBar('Username cannot be empty');
+      return;
+    }
+
     widget.auth.loginWithUserID(username).then((value) async {
       if (value == null) {
           logger.fine('user id auth failed');
@@ -70,5 +75,16 @@ class LoginButtonState extends State<LoginButton> {
           Navigator.pushNamed(context, '/home');
       }
     });
+  }
+
+  void _showSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.green,
+      behavior: SnackBarBehavior.floating, // Make the Snackbar floating
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: MediaQuery.of(context).size.height * 0.4), // Position it vertically
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

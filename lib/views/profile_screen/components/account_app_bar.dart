@@ -16,7 +16,7 @@ class AccountAppBar extends StatelessWidget implements PreferredSizeWidget {
     try {
       final user = Provider.of<UserProvider>(context).user;      
       if(user != null) {
-        username = user.name;
+        username = user.username;
         email = user.email;
       } else {
         username = 'Guest';

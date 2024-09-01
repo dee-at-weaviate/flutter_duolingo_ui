@@ -1,13 +1,28 @@
 import 'package:duolingo/util/api.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class User {
-  final String? name;
+  final String? username;
   final String? email;
   final String? userID;
 
-  User({required this.name, required this.email, required this.userID});
+  User({required this.username, required this.email, required this.userID});
+
+  String toJson() {
+    return json.encode({
+      "username" : username,
+      "userID" : userID,
+      "email" : email
+    }); 
+  }
+
+  factory User.fromJson(String data) {
+    dynamic user = json.decode(data);
+    return User(username:user['username'], email:user['email'], userID:user['userID']); 
+  }
 
   static Future<User> createNew(username, email) async {
     try {
@@ -19,7 +34,7 @@ class User {
       final response = await API.post(url, json.encode(data));
       logger.info('back from post create new user');
       logger.info(response);  
-      User user = User(name: response['username'] , email: response['email'], userID: response['user_id']);
+      User user = User(username: response['username'] , email: response['email'], userID: response['userID']);
       return user;
     } catch (e) {
       logger.fine('in error');
@@ -35,13 +50,42 @@ class UserProvider with ChangeNotifier {
 
   User? get user => _user;
 
-  void setUser(User user) {
-    _user = user;
-    notifyListeners(); 
+  UserProvider() {
+    _loadUser();
   }
 
-  void clearUser() {
-    _user = null;
-    notifyListeners(); 
+  void setUser(User user) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user', user.toJson()); // Ensure you're awaiting the future
+      _user = user;
+      notifyListeners();
+    } catch (e) {
+      logger.fine('Failed to save user: $e'); // Handle any potential errors
+    }
   }
+
+  Future<void> _loadUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = prefs.getString('user');
+    logger.info('in load user');
+    logger.info(userData);
+    if (userData != null) {
+      _user = User.fromJson(userData);
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshUser() async {
+    await _loadUser();
+  }
+
+  void clearUser() async {
+    _user = null;
+    notifyListeners();
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user'); 
+  }
+
 }

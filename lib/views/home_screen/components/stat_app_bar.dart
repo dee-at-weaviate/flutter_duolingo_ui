@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const StatAppBar({Key? key}) : super(key: key);
+  // final Provider  userProvider;
 
   @override
   Size get preferredSize => const Size.fromHeight(65);
@@ -12,10 +13,13 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     String? username;
+    final userProvider = Provider.of<UserProvider>(context);
     try {
-      final user = Provider.of<UserProvider>(context).user;      
+      final user = userProvider.user;   
+      logger.info('in app bar');
+      logger.info(user);   
       if(user != null) {
-        username = user.name;
+        username = user.username;
       } else {
         username = 'Guest';
       }
@@ -27,13 +31,11 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 120,
       backgroundColor: Colors.white,
       elevation: 1.5,
-      leading: flag(),
+      leading: logout(context, userProvider, username),
       title: Row(
         children: [
           const Padding(padding: EdgeInsets.all(20)),
-          crown(136),
-          const Padding(padding: EdgeInsets.all(20)),
-          streak(31, username),
+          title(),
         ],
       ),
       actions: [
@@ -52,7 +54,6 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
         const Padding(
           padding: EdgeInsets.all(2),
         ),
-        // Image.asset('assets/images/infinity.png', width: 20),
         Text(
           username,
           style: const TextStyle(
@@ -67,23 +68,27 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget streak(int n, username) {
+  Widget title() {
     return Row(
       children: [
         Image.asset(
-          'assets/images/streak.png',
+          'assets/icons/wealingo.png',
           width: 24,
         ),
         const Padding(
           padding: EdgeInsets.all(4),
         ),
-        Text(
-          '$n',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF9600),
+        const Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Tutorials',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -109,23 +114,25 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget flag() {
-    return Container(
-      margin: const EdgeInsets.only(left: 15, top: 18, bottom: 18),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          fit: BoxFit.scaleDown,
-          image: AssetImage('assets/images/korea-flag-transparent.png'),
-          // fit: BoxFit.cover,
+  Widget logout(context, userProvider, username) {
+    return GestureDetector(
+      onTap: () {
+        logger.info('tapped');
+        userProvider.clearUser();
+        Navigator.pushNamed(context, '/home');
+      },
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          username =='Guest'?'': 'Logout',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
         ),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          width: 2.5,
-          color: const Color(0xFFE5E5E5),
-        ),
-        color: Colors.grey.shade100,
-      ),
-      child: null /* add child content here */,
-    );
+      )
+    ); 
   }
+
 }

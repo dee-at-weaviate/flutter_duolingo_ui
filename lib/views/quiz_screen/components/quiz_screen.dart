@@ -6,12 +6,12 @@ import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
 import 'package:duolingo/views/quiz_screen/components/list_quiz.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:provider/provider.dart';
-// import 'package:logging/logging.dart';
 
 class QuizScreen extends StatefulWidget {
-  final String level;
+  final int? level;
 
   const QuizScreen ({ required this.level});
 
@@ -24,9 +24,16 @@ class QuizScreen extends StatefulWidget {
 class QuizScreenState extends State<QuizScreen> {
   double percent = 0.2;
   int index = 0;
-  late List questions;
+  late Future<List<dynamic>> questions;
   int totalScore = 0;
   int currentScore = 0;
+  var newLessons = []; 
+
+  @override
+  void initState() {
+    super.initState();
+    questions = _loadQuestions(widget.level);
+  }
 
   void _postScoretoLeaderboard(userID, totalScore) async {
     try {
@@ -44,9 +51,9 @@ class QuizScreenState extends State<QuizScreen> {
     }
   }
 
-  Future<List<dynamic>> _loadQuestions(courseId) async {
-    logger.info('fetching quiz questions');
-    String url = "quiz/level/" + widget.level;
+  Future<List<dynamic>> _loadQuestions(level) async {
+    logger.info('fetching quiz questions $level');
+    String url = "quiz/level/$level";
     try {
       final response = await API.get(url);
       // logger.info(response['questions']);
@@ -60,22 +67,27 @@ class QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // logger.info('in build of quiz node');
-    var newLessons = [];    
 
     return FutureBuilder(
-      future: _loadQuestions(widget.level), 
+      future: questions, 
       builder: (context, snapshot) {        
         if(snapshot.hasData) {
-          questions = snapshot.data as List<dynamic>;
+          List questions = snapshot.data as List<dynamic>;
           logger.info(questions);
-          logger.info(questions[0]);
+          
+          // logger.info(questions[0]);
           // var newLessons = [];
           for (int i=0; i< questions.length; i++) {
+            String options = questions[i]['options'];
+            String answer = questions[i]['answer'];
+            List<String> optionsList = options.split("; ");
+            optionsList.add(answer);
+            optionsList.shuffle(Random());
+            int chosen = optionsList.indexOf(answer);
+
             newLessons.add(
-              ListQuiz('Translate the sentence', questions[i]['text'],
-              [questions[i]['image_1'], questions[i]['image_2'], questions[i]['image_3'], questions[i]['image_4']],
-              questions[i]['answer'], 5,
+              ListQuiz('Translate the sentence', questions[i]['question'],
+              optionsList, chosen, questions[i]['difficulty_rating'],
               checkButton: bottomButton(context, 'NEXT'),
               onOptionSelected: (points) {                
                 currentScore = points;
@@ -122,7 +134,7 @@ class QuizScreenState extends State<QuizScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     _postScoretoLeaderboard(userID, totalScore);
-                    return dialog('Great score $totalScore ');
+                    return dialog('Your score $totalScore ');
                   },
                 ).then((_) {
                     Navigator.pushNamed(context, '/home');

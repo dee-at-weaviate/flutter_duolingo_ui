@@ -1,16 +1,19 @@
 import 'package:duolingo/util/api.dart';
 import 'package:duolingo/views/home_screen/components/generative_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:duolingo/util/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class GenerativeScreen extends StatelessWidget {
   final String? category;
   const GenerativeScreen(this.category, {Key? key}) : super(key: key);
 
-  Future<List<dynamic>> _generateQuestions() async {
+  Future<List<dynamic>> _generateQuestions(userID) async {
     logger.info('in generate quesitons');
-    String url = "questions/create/$category";
+    String url = userID==null?'questions/create/$category':'questions/create/$category&$userID';
     try {
       final response = await API.get(url);
+      // logger.info(response);
       return response['questions'];
     } catch (e) {
       logger.fine('in error');
@@ -21,10 +24,22 @@ class GenerativeScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     logger.info('in build of generative screen quesitons');
+    String? userID;
+    final userProvider = Provider.of<UserProvider>(context);
+    try {
+      final user = userProvider.user;   
+      logger.info('in app bar');
+      logger.info(user);   
+      if(user != null) {
+        userID = user.userID;
+      } 
+    } catch (e) {
+      logger.finer(e);
+    }
     return Scaffold(
-      // appBar: GenerativeAppBar(), // The app bar is rendered immediately
+      appBar: GenerativeAppBar(), // The app bar is rendered immediately
       body: FutureBuilder(
-        future: _generateQuestions(), 
+        future: _generateQuestions(userID), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -35,8 +50,9 @@ class GenerativeScreen extends StatelessWidget {
             return ListView.builder(
               itemCount: questions.length,
               itemBuilder: (context, index) {
+                logger.info(questions[index]);
                 return newsBox('assets/images/news-1.png',
-                  questions[index]['text'],
+                  questions[index]['question'],
                   questions[index]['answer'],
                   questions[index]['instruction']);
               }

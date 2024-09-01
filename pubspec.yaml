@@ -42,6 +42,7 @@ dependencies:
   contained_tab_bar_view: 
   flutter_custom_dialog: 
   logging:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

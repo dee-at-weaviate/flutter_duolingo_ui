@@ -9,7 +9,7 @@ class CenterDisplay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset('assets/images/duo-wave.png', height: 150),
+          Image.asset('assets/icons/wealingo.png', height: 250),
           Container(padding: const EdgeInsets.all(5)),
           Text('Wealingo',
               style: TextStyle(fontSize: 20, color: Colors.green)),

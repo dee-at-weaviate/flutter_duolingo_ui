@@ -14,8 +14,8 @@ class QuizScreenLevels extends StatelessWidget {
     try {
       final user = Provider.of<UserProvider>(context).user;   
       logger.info(user);
-      if(user != null && user.name != 'Guest') {
-        username = user.name;
+      if(user != null && user.username != 'Guest') {
+        username = user.username;
       } else {
         logger.info('show alert');
         return AlertDialog(
@@ -79,19 +79,19 @@ class QuizScreenLevels extends StatelessWidget {
           const Padding(padding: EdgeInsets.all(15)),
           QuizNode(
             'Basic',
-            crown: 1,
+            level: 2,
           ),
           const Padding(padding: EdgeInsets.all(10)),
           QuizNode(
             'Intermediate',
-            crown: 1,
+            level: 4,
           ),
           const Padding(padding: EdgeInsets.all(10)),
           QuizNode(
             'Expert',
             image: 'assets/images/bandages.png',
             color: Colors.redAccent,
-            crown: 4,
+            level: 5,
           ),
           const Padding(padding: EdgeInsets.all(10)),
         ],

@@ -1,4 +1,5 @@
 import 'package:duolingo/views/course_screen/course_tree.dart';
+import 'package:duolingo/views/explore_screen/explore_alert.dart';
 import 'package:duolingo/views/explore_screen/explore_screen.dart';
 import 'package:duolingo/views/generative_screen/generative_alert.dart';
 import 'package:duolingo/views/generative_screen/generative_screen.dart';
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // ProfileScreen(),
       LeaderboardScreen(),
       QuizScreenLevels(),
-      ExploreScreen(),
+      ExploreAlertScreen(),
     ];
 
     final List<PreferredSizeWidget> appBars = [

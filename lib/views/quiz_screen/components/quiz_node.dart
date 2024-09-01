@@ -9,23 +9,23 @@ class QuizNode extends StatelessWidget {
   final String name;
   String? image;
   Color? color;
-  int? crown;
+  final int level;
   double? percent;
 
   QuizNode(this.name,
-      {this.image, this.color, this.crown, this.percent, Key? key})
+      {this.image, this.color, required this.level, this.percent, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    logger.info('in build of quiz node');
+    // logger.info('in build of quiz node');
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const QuizScreen(level: "af1df6ef-52e1-4260-8957-86bd20193d2b"),
+                builder: (context) =>  QuizScreen(level: level),
               ),
             );
           },
@@ -83,7 +83,7 @@ class QuizNode extends StatelessWidget {
         children: [
           Image.asset('assets/images/crown.png', width: 40),
           Text(
-            '${crown == null || crown == 0 ? '' : crown}',
+            '',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
