@@ -25,14 +25,14 @@ class CourseTree extends StatelessWidget {
           const Padding(padding: EdgeInsets.all(10)),
           DoubleCourseNode(
             CourseNode(
-              'Introduce yourself',
+              'Introduce Yourself',
               image: 'assets/images/hand.png',
               color: Colors.yellow,
               percent: 1,
               crown: 1,
             ),
             CourseNode(
-              'Navigate a city',
+              'Navigate a City',
               image: 'assets/images/pen.png',
               color: const Color(0xFFCE82FF),
               crown: 2,
@@ -41,7 +41,7 @@ class CourseTree extends StatelessWidget {
           const Padding(padding: EdgeInsets.all(10)),
           DoubleCourseNode(
             CourseNode(
-              'Talk about family & friends',
+              'Talk about family and friends',
               image: 'assets/images/fish.png',
               color: Colors.green,
               // percent: 0.2,

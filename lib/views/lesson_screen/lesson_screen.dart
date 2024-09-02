@@ -4,15 +4,16 @@ import 'package:duolingo/views/lesson_screen/components/grid_lesson.dart';
 import 'package:duolingo/views/lesson_screen/components/lesson_app_bar.dart';
 import 'package:duolingo/views/lesson_screen/components/list_lesson.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 // import 'package:logging/logging.dart';
 
 // final Logger logger = Logger('LessonScreen');
 
 class LessonScreen extends StatefulWidget {
-  final String courseId;
+  final String category;
 
   // const LessonScreen({Key? key}) : super(key: key);
-  const LessonScreen ({ required this.courseId});
+  const LessonScreen ({ required this.category});
 
   @override
   State<StatefulWidget> createState() {
@@ -23,18 +24,18 @@ class LessonScreen extends StatefulWidget {
 class LessonScreenState extends State<LessonScreen> {
   double percent = 0.2;
   int index = 0;
-  late List questions;
+  late Future<List<dynamic>> questions;
 
   @override
   void initState() {
     super.initState();
-    // logger.info('in init load quesitons');
-    // questions = _loadQuestions(widget.courseId);
+    logger.info('in init load quesitons');
+    questions = _loadQuestions(widget.category);
   }
 
-  Future<List<dynamic>> _loadQuestions(courseId) async {
-    logger.info('in load quesitons');
-    String url = "questions/all/7880a7cd-705c-4989-809a-db16a3ca1701";
+  Future<List<dynamic>> _loadQuestions(category) async {
+    // logger.info('in load quesitons');
+    String url = "questions/all/$category";
     try {
       final response = await API.get(url);
       return response['questions'];
@@ -47,25 +48,29 @@ class LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    logger.info('in build of lesson node');
+    // logger.info('in build of lesson node');
     // var newLessons = [];
     return FutureBuilder(
-      future: _loadQuestions(widget.courseId), 
+      future: questions, 
       builder: (context, snapshot) {        
         if(snapshot.hasData) {
-          questions = snapshot.data as List<dynamic>;
+          List questions = snapshot.data as List<dynamic>;
           // logger.info(questions);
-          // logger.info(questions[0]);
           var newLessons = [];
           for (int i=0; i< questions.length; i++) {
+            String options = questions[i]['options'];
+            String answer = questions[i]['answer'];
+            List<String> optionsList = options.split("; ");
+            optionsList.add(answer);
+            optionsList.shuffle(Random());
+            int chosen = optionsList.indexOf(answer);
             newLessons.add(
-              ListLesson('Translate the sentence', questions[i]['text'],
-              [questions[i]['option_1'], questions[i]['option_2'], questions[i]['option_3'], questions[i]['option_4']],
-              questions[i]['answer'],
-              checkButton: bottomButton(context, 'Next')));
+              ListLesson('Translate the sentence', questions[i]['question'],
+              optionsList, chosen, questions[i]['instruction'],
+              checkButton: bottomButton(context, 'NEXT')));
           }
           logger.info(newLessons);
-          newLessons.add(GridLesson(checkButton: bottomButton(context, 'Done')));
+          // newLessons.add(GridLesson(checkButton: bottomButton(context, 'Done')));
 
           return Scaffold(
             appBar: LessonAppBar(percent: percent),
@@ -89,7 +94,7 @@ class LessonScreenState extends State<LessonScreen> {
         child: ElevatedButton(
           onPressed: () {
             setState(() {
-              if (index < 2) {
+              if (index < 3) {
                 // percent += 0.4;
                 index++;
               } else {
