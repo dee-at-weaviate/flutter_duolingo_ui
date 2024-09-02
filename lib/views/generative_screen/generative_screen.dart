@@ -3,16 +3,27 @@ import 'package:duolingo/views/home_screen/components/generative_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:duolingo/util/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class GenerativeScreen extends StatelessWidget {
   final String? category;
-  const GenerativeScreen(this.category, {Key? key}) : super(key: key);
+  final String? query;
+
+  const GenerativeScreen(this.category, this.query, {Key? key}) : super(key: key);
 
   Future<List<dynamic>> _generateQuestions(userID) async {
-    logger.info('in generate quesitons');
-    String url = userID==null?'questions/create/$category':'questions/create/$category&$userID';
+    // logger.info('in generate quesitons');
+    final Map<String, dynamic> data = {
+        'user_id': userID,
+        'category' : category,
+        'query' : query
+      };
+    String url = 'questions/create';  
+    
+    // String url = userID==null?'questions/create/$category':'questions/create/$category&$userID';
     try {
-      final response = await API.get(url);
+      // final response = await API.get(url);
+      final response = await API.post(url, json.encode(data));
       // logger.info(response);
       return response['questions'];
     } catch (e) {
@@ -23,13 +34,13 @@ class GenerativeScreen extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    logger.info('in build of generative screen quesitons');
+    // logger.info('in build of generative screen quesitons');
     String? userID;
     final userProvider = Provider.of<UserProvider>(context);
     try {
       final user = userProvider.user;   
-      logger.info('in app bar');
-      logger.info(user);   
+      // logger.info('in app bar');
+      // logger.info(user);   
       if(user != null) {
         userID = user.userID;
       } 

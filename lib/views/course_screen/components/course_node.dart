@@ -1,3 +1,4 @@
+import 'package:duolingo/views/app.dart';
 import 'package:duolingo/views/course_screen/components/course_popup.dart';
 import 'package:duolingo/views/lesson_screen/lesson_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,14 @@ class CourseNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // logger.info('in build of course node');
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const LessonScreen(),
+                builder: (context) => LessonScreen(category: name),
               ),
             );
           },
@@ -50,7 +52,7 @@ class CourseNode extends StatelessWidget {
               image ?? 'assets/images/egg.png',
               width: 42,
             ),
-            subCrown(),
+            // subCrown(),
           ],
         ),
       ],
@@ -59,9 +61,9 @@ class CourseNode extends StatelessWidget {
 
   progressCircle() {
     return Transform.rotate(
-      angle: 2.7,
+      angle: 12.7,
       child: CircularPercentIndicator(
-        radius: 55.0,
+        radius: 65.0,
         lineWidth: 10.0,
         percent: percent ?? 0,
         circularStrokeCap: CircularStrokeCap.round,

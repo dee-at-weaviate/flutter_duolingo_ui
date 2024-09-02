@@ -8,8 +8,8 @@ class API {
   static const String baseUrl = 'http://127.0.0.1:8000/tutorials/v1/';
 
   static Future<dynamic> get(String endpoint) async {
-    logger.info('in get');
-    logger.info(endpoint);
+    // logger.info('in get');
+    // logger.info(endpoint);
     final response = await http.get(Uri.parse(baseUrl + endpoint));
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -19,8 +19,8 @@ class API {
   }
 
   static Future<dynamic> post(String endpoint, String data) async {
-    logger.info('in post');
-    logger.info(data);
+    // logger.info('in post');
+    // logger.info(data);
     final response = await http.post(
                 Uri.parse(baseUrl + endpoint), 
                 body: data,

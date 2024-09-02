@@ -13,6 +13,7 @@ class GenerativeAlertScreen extends StatefulWidget {
 
 class _GenerativeAlertDialogState extends State<GenerativeAlertScreen> {
   String selectedValue = 'Introduce yourself'; 
+  TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {  
@@ -26,6 +27,16 @@ class _GenerativeAlertDialogState extends State<GenerativeAlertScreen> {
               Text(
                 'Generate personalized lessons',
                 style: TextStyle(color: Colors.blue),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _textController,
+                maxLength: 200,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter your query here... ',
+                  counterText: '', // To remove the default character counter
+                ),
               ),
               SizedBox(height: 20),
               DropdownButton<String>(
@@ -58,9 +69,11 @@ class _GenerativeAlertDialogState extends State<GenerativeAlertScreen> {
                   child: TextButton(
                     onPressed: () {
                       logger.info(selectedValue);
+                      String userInput = _textController.text;
+                      logger.info(userInput);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => GenerativeScreen(selectedValue),
+                          builder: (context) => GenerativeScreen(selectedValue, userInput),
                         ),
                       );
                     },

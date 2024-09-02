@@ -25,6 +25,7 @@ class QuizScreenState extends State<QuizScreen> {
   double percent = 0.2;
   int index = 0;
   late Future<List<dynamic>> questions;
+  List<Map<String, dynamic>> questionResponses = [];
   int totalScore = 0;
   int currentScore = 0;
   var newLessons = []; 
@@ -35,15 +36,16 @@ class QuizScreenState extends State<QuizScreen> {
     questions = _loadQuestions(widget.level);
   }
 
-  void _postScoretoLeaderboard(userID, totalScore) async {
+  void _postScoretoLeaderboard(userID, totalScore, questionResponses) async {
     try {
       String url = "quiz/score";
       final Map<String, dynamic> data = {
         'user_id': userID,
-        'totalScore' : totalScore
+        'totalScore' : totalScore,
+        'responses' : questionResponses
       };
       final response = await API.post(url, json.encode(data));
-      logger.info(response);
+      // logger.info(response);
     } catch (e) {
       logger.fine('in error');
       logger.fine(e);
@@ -52,7 +54,7 @@ class QuizScreenState extends State<QuizScreen> {
   }
 
   Future<List<dynamic>> _loadQuestions(level) async {
-    logger.info('fetching quiz questions $level');
+    // logger.info('fetching quiz questions $level');
     String url = "quiz/level/$level";
     try {
       final response = await API.get(url);
@@ -67,16 +69,12 @@ class QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       future: questions, 
       builder: (context, snapshot) {        
         if(snapshot.hasData) {
           List questions = snapshot.data as List<dynamic>;
-          logger.info(questions);
-          
-          // logger.info(questions[0]);
-          // var newLessons = [];
+          // logger.info(questions);
           for (int i=0; i< questions.length; i++) {
             String options = questions[i]['options'];
             String answer = questions[i]['answer'];
@@ -84,17 +82,30 @@ class QuizScreenState extends State<QuizScreen> {
             optionsList.add(answer);
             optionsList.shuffle(Random());
             int chosen = optionsList.indexOf(answer);
-
             newLessons.add(
               ListQuiz('Translate the sentence', questions[i]['question'],
               optionsList, chosen, questions[i]['difficulty_rating'],
               checkButton: bottomButton(context, 'NEXT'),
-              onOptionSelected: (points) {                
-                currentScore = points;
+              onOptionSelected: (points, isCorrect) {             
                 logger.info('currentScore: $currentScore');
+                if(!isCorrect) {
+                  currentScore = 0;
+                  int index = questionResponses.indexWhere((result) => result['question_id'] == questions[i]['question_id']);
+                  if (index != -1) {
+                    questionResponses[index]['isCorrect'] = isCorrect;
+                  } else {
+                    questionResponses.add({
+                      'question_id': questions[i]['question_id'],
+                      'category': questions[i]['category'],
+                      'isCorrect': isCorrect,
+                    });
+                  }
+                } else {
+                  currentScore = points;
+                }
               }));
           }
-          logger.info(newLessons);
+          // logger.info(newLessons);
           return Scaffold(
             appBar: LessonAppBar(percent: percent),
             body: newLessons[index],
@@ -124,6 +135,7 @@ class QuizScreenState extends State<QuizScreen> {
         child: ElevatedButton(
           onPressed: () {
             setState(() {
+              // logger.info('currentScore: $currentScore');
               totalScore += currentScore;
               if (percent < 1) {
                 percent += 0.4;                
@@ -133,7 +145,7 @@ class QuizScreenState extends State<QuizScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    _postScoretoLeaderboard(userID, totalScore);
+                    _postScoretoLeaderboard(userID, totalScore, questionResponses);
                     return dialog('Your score $totalScore ');
                   },
                 ).then((_) {

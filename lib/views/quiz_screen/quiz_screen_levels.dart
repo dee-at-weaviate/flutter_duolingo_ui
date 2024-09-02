@@ -13,11 +13,11 @@ class QuizScreenLevels extends StatelessWidget {
     String? username;
     try {
       final user = Provider.of<UserProvider>(context).user;   
-      logger.info(user);
+      // logger.info(user);
       if(user != null && user.username != 'Guest') {
         username = user.username;
       } else {
-        logger.info('show alert');
+        // logger.info('show alert');
         return AlertDialog(
           // title: Text('Hey there!', style: TextStyle(color: Colors.blue),),
           title: Text('You need to sign in to play the Quiz', style: TextStyle(color: Colors.blue),),

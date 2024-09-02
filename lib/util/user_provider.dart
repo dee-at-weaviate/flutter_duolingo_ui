@@ -68,8 +68,8 @@ class UserProvider with ChangeNotifier {
   Future<void> _loadUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userData = prefs.getString('user');
-    logger.info('in load user');
-    logger.info(userData);
+    // logger.info('in load user');
+    // logger.info(userData);
     if (userData != null) {
       _user = User.fromJson(userData);
       notifyListeners();

@@ -16,8 +16,8 @@ class StatAppBar extends StatelessWidget implements PreferredSizeWidget {
     final userProvider = Provider.of<UserProvider>(context);
     try {
       final user = userProvider.user;   
-      logger.info('in app bar');
-      logger.info(user);   
+      // logger.info('in app bar');
+      // logger.info(user);   
       if(user != null) {
         username = user.username;
       } else {
